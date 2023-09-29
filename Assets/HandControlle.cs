@@ -6,8 +6,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class HandControlle : MonoBehaviour
 {
-    [SerializeField]
-    GameObject BulletPrefab;
 
     ActionBasedController controller;
 
@@ -20,7 +18,18 @@ public class HandControlle : MonoBehaviour
 
     void OnTriggerPress(InputAction.CallbackContext context)
     {
-        Instantiate(BulletPrefab, transform.position, transform.rotation);
+        XRRayInteractor interactor = GetComponentInChildren<XRRayInteractor>();
+
+        foreach (IXRSelectInteractable interactable in interactor.interactablesSelected)
+        {
+            GameObject probablyGun = interactable.transform.gameObject;
+
+            if (probablyGun.TryGetComponent<GunController>(out GunController c))
+            {
+                c.PullTrigger();
+            }
+        }
+
     }
 
     // Update is called once per frame
